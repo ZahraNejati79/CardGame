@@ -37,7 +37,7 @@ function CardGame() {
   const [actionNumber, setActionNumber] = useState(20);
   const [isTimeout, setIsTimeout] = useState(false);
   const [startGame, setStartGame] = useState(false);
-  const { remideTime, startCountdown, resetCountDown } = useCountDowun({
+  const { timeLeft, startCountdown, resetCountDown } = useCountDowun({
     totalTime: 120,
     onFinish,
   });
@@ -107,7 +107,7 @@ function CardGame() {
   return (
     <div className="relative p-4">
       <div className="w-full p-4 bg-red-50">
-        <span>{remideTime}</span>
+        <span>{timeLeft}</span>
       </div>
 
       <div className="flex flex-col">
