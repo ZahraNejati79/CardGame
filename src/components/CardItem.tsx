@@ -8,6 +8,7 @@ type Props = {
   isVisible: boolean;
   isActive: boolean;
   isAnswerd: boolean;
+  isFailed: boolean;
   item: Card;
   handleCheckSameItems: (item: Card) => Promise<void>;
 };
@@ -17,13 +18,14 @@ function CardItem({
   isActive,
   isVisible,
   isAnswerd,
+  isFailed,
   handleCheckSameItems,
 }: Props) {
   return (
     <div
       onClick={() => isActive && !isAnswerd && handleCheckSameItems(item)}
       className={`${
-        isAnswerd ? "bg-green-300" : ""
+        isAnswerd ? "bg-green-300" : isFailed ? "bg-red-300" : ""
       } min-w-40 min-h-40 flex items-center justify-center cursor-pointer border border-gray-500 rounded-2xl`}
       key={item.id}
     >

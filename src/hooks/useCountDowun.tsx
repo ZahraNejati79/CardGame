@@ -14,7 +14,7 @@ function useCountDowun({ totalTime = 120, onFinish }: Props) {
   }, [countDown]);
 
   useEffect(() => {
-    return () => clearInterval(intervalRef.current);
+    return () => clearInterval(intervalRef.current!);
   }, []);
 
   const startCountdown = useCallback(() => {

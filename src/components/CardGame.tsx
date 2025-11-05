@@ -38,7 +38,7 @@ function CardGame() {
   const [isTimeout, setIsTimeout] = useState(false);
   const [startGame, setStartGame] = useState(false);
   const { remideTime, startCountdown, resetCountDown } = useCountDowun({
-    totalTime: 10,
+    totalTime: 120,
     onFinish,
   });
 
@@ -80,7 +80,6 @@ function CardGame() {
       setCorrectItems((prev) => [...prev, firstOption, item]);
     } else {
       //reset
-      alert("ooops");
     }
   };
 
@@ -89,7 +88,7 @@ function CardGame() {
       setStartGame(true);
       startCountdown();
     }
-
+    setActionNumber((prev) => prev - 1);
     if (firstOption) {
       if (item.id === firstOption.id) {
         return;
@@ -99,7 +98,6 @@ function CardGame() {
         handleCehckAnswer(item);
         setFirstOption(undefined);
         setSecondOption(undefined);
-        setActionNumber((prev) => prev - 2);
       }, 2000);
     } else {
       setFirstOption(item);
@@ -124,6 +122,11 @@ function CardGame() {
             item.id === firstOption?.id || item.id === secondOption?.id;
           const isActive = !(firstOption && secondOption);
           const isAnswerd = correctItems.some((i) => i.id === item.id);
+          const isFailed =
+            firstOption &&
+            secondOption &&
+            firstOption.text !== secondOption.text &&
+            isVisible;
 
           return (
             <CardItem
@@ -132,6 +135,7 @@ function CardGame() {
               isActive={isActive}
               isAnswerd={isAnswerd}
               item={item}
+              isFailed={isFailed}
               handleCheckSameItems={handleCheckSameItems}
             />
           );
