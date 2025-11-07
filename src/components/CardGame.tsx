@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import CardItem from "./CardItem";
 import Timer from "./Timer";
+import SettingsForm from "./SettingsForm";
 
 type Card = {
   id: number;
@@ -41,6 +42,7 @@ function CardGame() {
   const [secondOption, setSecondOption] = useState<Card>();
   const [correctItems, setCorrectItems] = useState<Card[]>([]);
   const [actionNumber, setActionNumber] = useState(20);
+  const [time, setTime] = useState(120);
   const [isTimeout, setIsTimeout] = useState(false);
   const [startGame, setStartGame] = useState(false);
   const [timerControls, setTimerControls] = useState<TimerController>();
@@ -66,11 +68,11 @@ function CardGame() {
     return correctItems.length === cards.length;
   }, [isFinished]);
 
-  const resetGame = () => {
+  const resetGame = (newAction: number = actionNumber) => {
     setFirstOption(undefined);
     setSecondOption(undefined);
     setCorrectItems([]);
-    setActionNumber(20);
+    setActionNumber(newAction);
     setStartGame(false);
     setIsTimeout(false);
     timerControls?.reset();
@@ -107,7 +109,25 @@ function CardGame() {
     }
   };
 
-  console.log("cardGame");
+  const initailSettings = { actionNumber: 20, time: 120 };
+  const [formInputs, setFormInputs] = useState(initailSettings);
+  const changeHandler = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    name: string
+  ) => {
+    setFormInputs((prev) => ({ ...prev, [name]: e.target.value }));
+  };
+
+  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const newTime = Number(formInputs.time);
+    const newAction = Number(formInputs.actionNumber);
+
+    setTime(newTime);
+    setActionNumber(newAction);
+    resetGame(newAction);
+  };
+
   return (
     <div className="relative flex flex-col gap-8 p-4">
       <div className="flex items-center justify-between p-4">
@@ -115,7 +135,7 @@ function CardGame() {
           <div>Time:</div>
           <div className="font-bold">
             <Timer
-              totalTime={120}
+              totalTime={time}
               onFinish={onFinish}
               onMount={(ctrls: TimerController) => setTimerControls(ctrls)}
             />
@@ -126,6 +146,12 @@ function CardGame() {
           <div className="font-bold">{actionNumber}</div>
         </div>
       </div>
+
+      <SettingsForm
+        changeHandler={changeHandler}
+        submitHandler={submitHandler}
+        formInputs={formInputs}
+      />
 
       <div className="grid grid-cols-4 gap-2">
         {cards.map((item) => {

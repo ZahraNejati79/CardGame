@@ -25,6 +25,10 @@ function Timer({ totalTime, onFinish, onMount }: TimerProps) {
     });
   }, [startCountdown, stopCountdown, resetCountDown]);
 
+  useEffect(() => {
+    resetCountDown();
+  }, [totalTime]);
+
   return (
     <div>
       <span>{timeLeft}</span>
