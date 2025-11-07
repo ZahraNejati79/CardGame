@@ -1,19 +1,14 @@
 import { memo, useEffect } from "react";
 import useCountDowun from "../hooks/useCountDowun";
+import type { TimerController } from "../types/modules";
 
-type TimerController = {
-  start: () => void;
-  stop: () => void;
-  reset: () => void;
-};
-
-type TimerProps = {
+type Props = {
   totalTime: number;
   onFinish: () => void;
   onMount: (ctrls: TimerController) => void;
 };
 
-function Timer({ totalTime, onFinish, onMount }: TimerProps) {
+function Timer({ totalTime, onFinish, onMount }: Props) {
   const { resetCountDown, startCountdown, stopCountdown, timeLeft } =
     useCountDowun({ totalTime, onFinish });
 

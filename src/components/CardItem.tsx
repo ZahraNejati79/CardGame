@@ -1,8 +1,4 @@
-type Card = {
-  id: number;
-  text: string;
-  label: string;
-};
+import type { Card } from "../types/modules";
 
 type Props = {
   isVisible: boolean;

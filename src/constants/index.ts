@@ -1,0 +1,18 @@
+export const fruitsArray = [
+  { id: 1, text: "🍎", label: "🐶" },
+  { id: 2, text: "🍎", label: "🐱" },
+  { id: 3, text: "🍌", label: "🐭" },
+  { id: 4, text: "🍌", label: "🐹" },
+  { id: 5, text: "🍊", label: "🐰" },
+  { id: 6, text: "🍊", label: "🦊" },
+  { id: 7, text: "🍇", label: "🐻" },
+  { id: 8, text: "🍇", label: "🐼" },
+  { id: 9, text: "🥭", label: "🐨" },
+  { id: 10, text: "🥭", label: "🐯" },
+  { id: 11, text: "🍍", label: "🦁" },
+  { id: 12, text: "🍍", label: "🐮" },
+  { id: 13, text: "🍓", label: "🐷" },
+  { id: 14, text: "🍓", label: "🐸" },
+  { id: 15, text: "🥝", label: "🐵" },
+  { id: 16, text: "🥝", label: "🐔" },
+];

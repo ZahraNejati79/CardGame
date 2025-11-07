@@ -2,37 +2,10 @@ import { useCallback, useMemo, useState } from "react";
 import CardItem from "./CardItem";
 import Timer from "./Timer";
 import SettingsForm from "./SettingsForm";
+import type { Card, TimerController } from "../types/modules";
+import { fruitsArray } from "../constants";
 
-type Card = {
-  id: number;
-  text: string;
-  label: string;
-};
-
-type TimerController = {
-  start: () => void;
-  stop: () => void;
-  reset: () => void;
-};
-
-const fruitsArray = [
-  { id: 1, text: "🍎", label: "🐶" },
-  { id: 2, text: "🍎", label: "🐱" },
-  { id: 3, text: "🍌", label: "🐭" },
-  { id: 4, text: "🍌", label: "🐹" },
-  { id: 5, text: "🍊", label: "🐰" },
-  { id: 6, text: "🍊", label: "🦊" },
-  { id: 7, text: "🍇", label: "🐻" },
-  { id: 8, text: "🍇", label: "🐼" },
-  { id: 9, text: "🥭", label: "🐨" },
-  { id: 10, text: "🥭", label: "🐯" },
-  { id: 11, text: "🍍", label: "🦁" },
-  { id: 12, text: "🍍", label: "🐮" },
-  { id: 13, text: "🍓", label: "🐷" },
-  { id: 14, text: "🍓", label: "🐸" },
-  { id: 15, text: "🥝", label: "🐵" },
-  { id: 16, text: "🥝", label: "🐔" },
-];
+const initailSettings = { actionNumber: 20, time: 5 };
 
 function CardGame() {
   const [cards, setCards] = useState<Card[]>(() =>
@@ -41,11 +14,14 @@ function CardGame() {
   const [firstOption, setFirstOption] = useState<Card>();
   const [secondOption, setSecondOption] = useState<Card>();
   const [correctItems, setCorrectItems] = useState<Card[]>([]);
-  const [actionNumber, setActionNumber] = useState(20);
-  const [time, setTime] = useState(120);
+  const [actionNumber, setActionNumber] = useState(
+    initailSettings.actionNumber
+  );
+  const [time, setTime] = useState(initailSettings.time);
   const [isTimeout, setIsTimeout] = useState(false);
   const [startGame, setStartGame] = useState(false);
   const [timerControls, setTimerControls] = useState<TimerController>();
+  const [formInputs, setFormInputs] = useState(initailSettings);
 
   const onFinish = useCallback(() => {
     setIsTimeout(true);
@@ -68,7 +44,7 @@ function CardGame() {
     return correctItems.length === cards.length;
   }, [isFinished]);
 
-  const resetGame = (newAction: number = actionNumber) => {
+  const resetGame = (newAction: number = formInputs.actionNumber) => {
     setFirstOption(undefined);
     setSecondOption(undefined);
     setCorrectItems([]);
@@ -109,8 +85,6 @@ function CardGame() {
     }
   };
 
-  const initailSettings = { actionNumber: 20, time: 120 };
-  const [formInputs, setFormInputs] = useState(initailSettings);
   const changeHandler = (
     e: React.ChangeEvent<HTMLInputElement>,
     name: string
@@ -147,11 +121,11 @@ function CardGame() {
         </div>
       </div>
 
-      <SettingsForm
+      {/* <SettingsForm
         changeHandler={changeHandler}
         submitHandler={submitHandler}
         formInputs={formInputs}
-      />
+      /> */}
 
       <div className="grid grid-cols-4 gap-2">
         {cards.map((item) => {
@@ -181,7 +155,7 @@ function CardGame() {
 
       {isFinished && (
         <div className="absolute inset-0 bg-red-100/50">
-          <div className="cursor-pointer" onClick={resetGame}>
+          <div className="cursor-pointer" onClick={() => resetGame()}>
             شروع بازی
           </div>
           <div>{isWin ? <div>برررررررررردی</div> : <div> باختی</div>}</div>
