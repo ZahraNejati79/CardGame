@@ -1,9 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
 import CardItem from "./CardItem";
-import Timer from "./Timer";
-import SettingsForm from "./SettingsForm";
 import type { Card, TimerController } from "../types/modules";
 import { fruitsArray } from "../constants";
+import StatusBar from "./StatusBar";
 
 const initailSettings = { actionNumber: 20, time: 5 };
 
@@ -104,22 +103,12 @@ function CardGame() {
 
   return (
     <div className="relative flex flex-col gap-8 p-4">
-      <div className="flex items-center justify-between p-4">
-        <div className="flex items-center gap-2">
-          <div>Time:</div>
-          <div className="font-bold">
-            <Timer
-              totalTime={time}
-              onFinish={onFinish}
-              onMount={(ctrls: TimerController) => setTimerControls(ctrls)}
-            />
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <div>Moves:</div>
-          <div className="font-bold">{actionNumber}</div>
-        </div>
-      </div>
+      <StatusBar
+        time={time}
+        actionNumber={actionNumber}
+        onFinish={onFinish}
+        onMount={(ctrls: TimerController) => setTimerControls(ctrls)}
+      />
 
       {/* <SettingsForm
         changeHandler={changeHandler}
