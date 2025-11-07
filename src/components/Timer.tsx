@@ -1,12 +1,32 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
+import useCountDowun from "../hooks/useCountDowun";
 
-type TimerProps = {
-  timeLeft: string;
+type TimerController = {
+  start: () => void;
+  stop: () => void;
+  reset: () => void;
 };
 
-function Timer({ timeLeft }: TimerProps) {
+type TimerProps = {
+  totalTime: number;
+  onFinish: () => void;
+  onMount: (ctrls: TimerController) => void;
+};
+
+function Timer({ totalTime, onFinish, onMount }: TimerProps) {
+  const { resetCountDown, startCountdown, stopCountdown, timeLeft } =
+    useCountDowun({ totalTime, onFinish });
+
+  useEffect(() => {
+    onMount?.({
+      start: startCountdown,
+      reset: resetCountDown,
+      stop: stopCountdown,
+    });
+  }, [startCountdown, stopCountdown, resetCountDown]);
+
   return (
-    <div className="w-full p-4 bg-red-50">
+    <div>
       <span>{timeLeft}</span>
     </div>
   );

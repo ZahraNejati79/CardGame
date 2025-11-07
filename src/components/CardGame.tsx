@@ -1,11 +1,17 @@
 import { useCallback, useMemo, useState } from "react";
-import useCountDowun from "../hooks/useCountDowun";
 import CardItem from "./CardItem";
+import Timer from "./Timer";
 
 type Card = {
   id: number;
   text: string;
   label: string;
+};
+
+type TimerController = {
+  start: () => void;
+  stop: () => void;
+  reset: () => void;
 };
 
 const fruitsArray = [
@@ -37,16 +43,11 @@ function CardGame() {
   const [actionNumber, setActionNumber] = useState(20);
   const [isTimeout, setIsTimeout] = useState(false);
   const [startGame, setStartGame] = useState(false);
+  const [timerControls, setTimerControls] = useState<TimerController>();
 
   const onFinish = useCallback(() => {
-    console.log("onFinish");
     setIsTimeout(true);
   }, []);
-
-  const { timeLeft, startCountdown, resetCountDown } = useCountDowun({
-    totalTime: 5,
-    onFinish,
-  });
 
   const isFinished = useMemo(() => {
     if (actionNumber <= 0) {
@@ -72,7 +73,7 @@ function CardGame() {
     setActionNumber(20);
     setStartGame(false);
     setIsTimeout(false);
-    resetCountDown();
+    timerControls?.reset();
   };
 
   const handleCehckAnswer = (item: Card) => {
@@ -88,7 +89,7 @@ function CardGame() {
   const handleCheckSameItems = async (item: Card) => {
     if (!startGame) {
       setStartGame(true);
-      startCountdown();
+      timerControls?.start();
     }
     setActionNumber((prev) => prev - 1);
     if (firstOption) {
@@ -106,12 +107,19 @@ function CardGame() {
     }
   };
 
+  console.log("cardGame");
   return (
     <div className="relative flex flex-col gap-8 p-4">
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center gap-2">
           <div>Time:</div>
-          <div className="font-bold">{timeLeft}</div>
+          <div className="font-bold">
+            <Timer
+              totalTime={120}
+              onFinish={onFinish}
+              onMount={(ctrls: TimerController) => setTimerControls(ctrls)}
+            />
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <div>Moves:</div>
@@ -138,7 +146,7 @@ function CardGame() {
               isActive={isActive}
               isAnswerd={isAnswerd}
               item={item}
-              isFailed={isFailed}
+              isFailed={!!isFailed}
               handleCheckSameItems={handleCheckSameItems}
             />
           );
