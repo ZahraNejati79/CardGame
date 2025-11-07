@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import useCountDowun from "../hooks/useCountDowun";
 import CardItem from "./CardItem";
 
@@ -37,14 +37,16 @@ function CardGame() {
   const [actionNumber, setActionNumber] = useState(20);
   const [isTimeout, setIsTimeout] = useState(false);
   const [startGame, setStartGame] = useState(false);
+
+  const onFinish = useCallback(() => {
+    console.log("onFinish");
+    setIsTimeout(true);
+  }, []);
+
   const { timeLeft, startCountdown, resetCountDown } = useCountDowun({
-    totalTime: 120,
+    totalTime: 5,
     onFinish,
   });
-
-  function onFinish() {
-    setIsTimeout(true);
-  }
 
   const isFinished = useMemo(() => {
     if (actionNumber <= 0) {
@@ -105,15 +107,16 @@ function CardGame() {
   };
 
   return (
-    <div className="relative p-4">
-      <div className="w-full p-4 bg-red-50">
-        <span>{timeLeft}</span>
-      </div>
-
-      <div className="flex flex-col">
-        <span>first-{firstOption?.id}</span>
-        <span>second-{secondOption?.id}</span>
-        <div>actionNumber-{actionNumber}</div>
+    <div className="relative flex flex-col gap-8 p-4">
+      <div className="flex items-center justify-between p-4">
+        <div className="flex items-center gap-2">
+          <div>Time:</div>
+          <div className="font-bold">{timeLeft}</div>
+        </div>
+        <div className="flex items-center gap-2">
+          <div>Moves:</div>
+          <div className="font-bold">{actionNumber}</div>
+        </div>
       </div>
 
       <div className="grid grid-cols-4 gap-2">

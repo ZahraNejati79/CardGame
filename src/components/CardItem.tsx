@@ -26,10 +26,10 @@ function CardItem({
       onClick={() => isActive && !isAnswerd && handleCheckSameItems(item)}
       className={`${
         isAnswerd ? "bg-green-300" : isFailed ? "bg-red-300" : ""
-      } min-w-40 min-h-40 flex items-center justify-center cursor-pointer border border-gray-500 rounded-2xl`}
+      } flex items-center justify-center cursor-pointer border border-gray-500 rounded-2xl`}
       key={item.id}
     >
-      <div className="p-8 text-5xl">
+      <div className="text-3xl sm:text-5xl p-4  sm:p-8">
         {isAnswerd ? item.text : isVisible ? item.text : "*"}
       </div>
     </div>

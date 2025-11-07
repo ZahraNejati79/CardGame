@@ -22,12 +22,15 @@ function useCountDowun({ totalTime = 120, onFinish }: Props) {
   const decrementCount = useCallback(() => {
     setCountDown((prev) => {
       if (prev <= 1) {
-        onFinish?.();
+        stopCountdown();
+        onFinish && onFinish();
         return 0;
       }
       return prev - 1;
     });
-    timeoutRef.current = window.setTimeout(decrementCount, 1000);
+
+    if (timeoutRef.current)
+      timeoutRef.current = window.setTimeout(decrementCount, 1000);
   }, [onFinish]);
 
   const startCountdown = useCallback(() => {
