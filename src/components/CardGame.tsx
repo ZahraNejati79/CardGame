@@ -22,41 +22,34 @@ function CardGame() {
     initailSettings.actionNumber
   );
   const [time, setTime] = useState(initailSettings.time);
-  const [isTimeout, setIsTimeout] = useState(false);
-  const [startGame, setStartGame] = useState(false);
+  const [isTimeOver, setIsTimeOver] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
   const [timerControls, setTimerControls] = useState<TimerController>();
   const [formInputs, setFormInputs] = useState(initailSettings);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const onFinish = useCallback(() => {
-    setIsTimeout(true);
+    setIsTimeOver(true);
   }, []);
 
-  const isFinished = useMemo(() => {
-    if (actionNumber <= 0) {
-      console.log("actionNumber");
-      return true;
-    } else if (correctItems.length === cards.length) {
-      console.log("correctItems");
-      return true;
-    } else if (isTimeout) {
-      console.log("timeOut", isTimeout);
-      return true;
-    }
-  }, [isTimeout, actionNumber, correctItems]);
+  const isFinished = useMemo<boolean>(() => {
+    return (
+      actionNumber <= 0 || correctItems.length === cards.length || isTimeOver
+    );
+  }, [actionNumber, correctItems, cards.length, isTimeOver]);
 
   const isWin = useMemo(() => {
     return correctItems.length === cards.length;
   }, [isFinished]);
 
-  const resetGame = useCallback(
+  const handleRestartGame = useCallback(
     (newAction: number = formInputs.actionNumber) => {
       setFirstOption(undefined);
       setSecondOption(undefined);
       setCorrectItems([]);
       setActionNumber(newAction);
-      setStartGame(false);
-      setIsTimeout(false);
+      setGameStarted(false);
+      setIsTimeOver(false);
       setCards(shuffleArray(fruitsArray));
       timerControls?.reset();
     },
@@ -73,9 +66,9 @@ function CardGame() {
     }
   };
 
-  const handleCheckSameItems = async (item: Card) => {
-    if (!startGame) {
-      setStartGame(true);
+  const handleSelectCard = async (item: Card) => {
+    if (!gameStarted) {
+      setGameStarted(true);
       timerControls?.start();
     }
     setActionNumber((prev) => prev - 1);
@@ -94,22 +87,22 @@ function CardGame() {
     }
   };
 
-  const changeHandler = (
+  const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     name: string
   ) => {
     setFormInputs((prev) => ({ ...prev, [name]: e.target.value }));
   };
 
-  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newTime = Number(formInputs.time);
     const newAction = Number(formInputs.actionNumber);
 
     setTime(newTime);
     setActionNumber(newAction);
-    resetGame(newAction);
-    setIsOpen(false);
+    handleRestartGame(newAction);
+    setIsSettingsOpen(false);
   };
 
   return (
@@ -121,10 +114,10 @@ function CardGame() {
         onMount={(ctrls: TimerController) => setTimerControls(ctrls)}
       />
 
-      <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+      <Modal open={isSettingsOpen} onClose={() => setIsSettingsOpen(false)}>
         <SettingsForm
-          changeHandler={changeHandler}
-          submitHandler={submitHandler}
+          onInputChange={handleInputChange}
+          onFormSubmit={handleFormSubmit}
           formInputs={formInputs}
         />
       </Modal>
@@ -149,7 +142,7 @@ function CardGame() {
               isAnswerd={isAnswerd}
               item={item}
               isFailed={!!isFailed}
-              handleCheckSameItems={handleCheckSameItems}
+              onSelect={handleSelectCard}
             />
           );
         })}
@@ -157,13 +150,13 @@ function CardGame() {
 
       <div className="flex items-center justify-evenly divide-x rounded-md border border-slate-500">
         <div
-          onClick={() => resetGame()}
+          onClick={() => handleRestartGame()}
           className="bg-slate-500 font-bold text-white w-full p-4 cursor-pointer flex items-center justify-center gap-2 rounded-l-md"
         >
           RESTART
         </div>
         <div
-          onClick={() => setIsOpen(true)}
+          onClick={() => setIsSettingsOpen(true)}
           className="w-full p-4 cursor-pointer flex items-center justify-center gap-2 rounded-r-md"
         >
           SETTINGS
@@ -171,9 +164,9 @@ function CardGame() {
       </div>
 
       <GameResultOverlay
-        isFinished={!!isFinished}
+        isFinished={isFinished}
         isWin={isWin}
-        resetGame={resetGame}
+        onRestart={handleRestartGame}
       />
     </div>
   );

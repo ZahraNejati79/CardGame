@@ -1,27 +1,27 @@
 import InputField from "./InputField";
 
 type Props = {
-  submitHandler: (e: React.FormEvent<HTMLFormElement>) => void;
-  changeHandler: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
+  onFormSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  onInputChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
   formInputs: {
     actionNumber: number;
     time: number;
   };
 };
 
-function SettingsForm({ submitHandler, changeHandler, formInputs }: Props) {
+function SettingsForm({ onFormSubmit, onInputChange, formInputs }: Props) {
   return (
-    <form className="flex flex-col gap-4" onSubmit={submitHandler}>
+    <form className="flex flex-col gap-4" onSubmit={onFormSubmit}>
       <InputField
         value={formInputs.actionNumber}
-        onChange={(e) => changeHandler(e, "actionNumber")}
+        onChange={(e) => onInputChange(e, "actionNumber")}
         name="actionNumber"
         type="number"
         label="Action Number"
       />
       <InputField
         value={formInputs.time}
-        onChange={(e) => changeHandler(e, "time")}
+        onChange={(e) => onInputChange(e, "time")}
         name="time"
         type="number"
         label="Time"

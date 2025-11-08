@@ -6,7 +6,7 @@ type Props = {
   isAnswerd: boolean;
   isFailed: boolean;
   item: Card;
-  handleCheckSameItems: (item: Card) => Promise<void>;
+  onSelect: (item: Card) => Promise<void>;
 };
 
 function CardItem({
@@ -15,16 +15,16 @@ function CardItem({
   isVisible,
   isAnswerd,
   isFailed,
-  handleCheckSameItems,
+  onSelect,
 }: Props) {
   const isFlipped = isAnswerd || isVisible;
   return (
     <div
-      onClick={() => isActive && !isAnswerd && handleCheckSameItems(item)}
+      onClick={() => isActive && !isAnswerd && onSelect(item)}
       className="relative cursor-pointer perspective-[1000px]"
     >
       <div
-        className={`rounded-2xl p-12 border-8 border-slate-500 flex items-center justify-center
+        className={`rounded-2xl p-8 md:p-12 border-8 border-slate-500 flex items-center justify-center
           transition-transform duration-500 transform-3d
           ${isFlipped ? "rotate-y-180" : ""}
           ${isAnswerd ? "bg-green-300" : isFailed ? "bg-red-300" : "bg-white"}

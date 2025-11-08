@@ -1,10 +1,10 @@
 type Props = {
   isFinished: boolean;
   isWin: Boolean;
-  resetGame: (newAction?: number) => void;
+  onRestart: (newAction?: number) => void;
 };
 
-function GameResultOverlay({ isFinished, isWin, resetGame }: Props) {
+function GameResultOverlay({ isFinished, isWin, onRestart }: Props) {
   return (
     isFinished && (
       <div
@@ -12,7 +12,7 @@ function GameResultOverlay({ isFinished, isWin, resetGame }: Props) {
       ${isWin ? "bg-green-400/30" : "bg-red-400/30"}
     `}
       >
-        <div className="flex flex-col items-center gap-6 bg-white/90 shadow-2xl rounded-3xl px-10 py-8 text-center animate-fadeIn">
+        <div className="m-2 flex flex-col items-center gap-6 bg-white/90 shadow-2xl rounded-3xl px-10 py-8 text-center animate-fadeIn">
           <div className="text-5xl font-extrabold">
             {isWin ? "🎉 You Won!" : "😢 You Lost!"}
           </div>
@@ -24,7 +24,7 @@ function GameResultOverlay({ isFinished, isWin, resetGame }: Props) {
           </div>
 
           <button
-            onClick={() => resetGame()}
+            onClick={() => onRestart()}
             className={`px-8 py-3 rounded-2xl font-semibold text-xl transition-all duration-200 cursor-pointer
           ${
             isWin
