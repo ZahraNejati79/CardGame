@@ -30,6 +30,12 @@ function CardGame() {
 
   const timeoutRef = useRef<number | null>(null);
 
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
   const onFinish = useCallback(() => {
     setIsTimeOver(true);
   }, []);
@@ -94,12 +100,6 @@ function CardGame() {
     },
     [firstOption, gameStarted, timerControls, handleCheckAnswer]
   );
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
