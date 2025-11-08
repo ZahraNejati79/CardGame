@@ -27,7 +27,7 @@ function SettingsForm({ onFormSubmit, onInputChange, formInputs }: Props) {
         label="Time"
       />
       <button className="btn btn__primary" type="submit">
-        submit
+        Apply Settings
       </button>
     </form>
   );
