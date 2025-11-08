@@ -3,13 +3,17 @@ import CardItem from "./CardItem";
 import type { Card, TimerController } from "../types/modules";
 import { fruitsArray } from "../constants";
 import StatusBar from "./StatusBar";
+import Modal from "./Modal";
+import SettingsForm from "./SettingsForm";
 
 const initailSettings = { actionNumber: 20, time: 5 };
 
+function shuffleArray<T>(array: T[]): T[] {
+  return [...array].sort(() => Math.random() - 0.5);
+}
+
 function CardGame() {
-  const [cards, setCards] = useState<Card[]>(() =>
-    [...fruitsArray].sort(() => Math.random() - 0.5)
-  );
+  const [cards, setCards] = useState<Card[]>(() => shuffleArray(fruitsArray));
   const [firstOption, setFirstOption] = useState<Card>();
   const [secondOption, setSecondOption] = useState<Card>();
   const [correctItems, setCorrectItems] = useState<Card[]>([]);
@@ -21,6 +25,7 @@ function CardGame() {
   const [startGame, setStartGame] = useState(false);
   const [timerControls, setTimerControls] = useState<TimerController>();
   const [formInputs, setFormInputs] = useState(initailSettings);
+  const [isOpen, setIsOpen] = useState(false);
 
   const onFinish = useCallback(() => {
     setIsTimeout(true);
@@ -50,6 +55,7 @@ function CardGame() {
     setActionNumber(newAction);
     setStartGame(false);
     setIsTimeout(false);
+    setCards(shuffleArray(fruitsArray));
     timerControls?.reset();
   };
 
@@ -99,10 +105,11 @@ function CardGame() {
     setTime(newTime);
     setActionNumber(newAction);
     resetGame(newAction);
+    setIsOpen(false);
   };
 
   return (
-    <div className="relative flex flex-col gap-8 p-4">
+    <div className="flex flex-col gap-4">
       <StatusBar
         time={time}
         actionNumber={actionNumber}
@@ -110,13 +117,15 @@ function CardGame() {
         onMount={(ctrls: TimerController) => setTimerControls(ctrls)}
       />
 
-      {/* <SettingsForm
-        changeHandler={changeHandler}
-        submitHandler={submitHandler}
-        formInputs={formInputs}
-      /> */}
+      <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+        <SettingsForm
+          changeHandler={changeHandler}
+          submitHandler={submitHandler}
+          formInputs={formInputs}
+        />
+      </Modal>
 
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-4 gap-4">
         {cards.map((item) => {
           const isVisible =
             item.id === firstOption?.id || item.id === secondOption?.id;
@@ -140,6 +149,21 @@ function CardGame() {
             />
           );
         })}
+      </div>
+
+      <div className="flex items-center justify-evenly divide-x rounded-md border border-slate-500">
+        <div
+          onClick={() => resetGame()}
+          className="bg-slate-500 font-bold text-white w-full p-4 cursor-pointer flex items-center justify-center gap-2 rounded-l-md"
+        >
+          RESTART
+        </div>
+        <div
+          onClick={() => setIsOpen(true)}
+          className="w-full p-4 cursor-pointer flex items-center justify-center gap-2 rounded-r-md"
+        >
+          SETTINGS
+        </div>
       </div>
 
       {isFinished && (

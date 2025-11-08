@@ -2,11 +2,7 @@ import "./App.css";
 import CardGame from "./components/CardGame";
 
 function App() {
-  return (
-    <main className="max-w-5xl w-full mx-auto">
-      <CardGame />
-    </main>
-  );
+  return <CardGame />;
 }
 
 export default App;

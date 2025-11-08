@@ -9,38 +9,17 @@
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+@layer base {
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+@layer components {
+  .input__field {
+    @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5;
   }
-  to {
-    transform: rotate(360deg);
+  .btn {
+    @apply font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 cursor-pointer;
   }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  .btn__primary {
+    @apply text-white bg-slate-700 hover:bg-slate-800 focus:ring-4 focus:ring-slate-300;
   }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
