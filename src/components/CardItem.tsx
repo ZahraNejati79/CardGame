@@ -6,7 +6,7 @@ type Props = {
   isAnswerd: boolean;
   isFailed: boolean;
   item: Card;
-  onSelect: (item: Card) => Promise<void>;
+  onSelect: (item: Card) => void;
 };
 
 function CardItem({

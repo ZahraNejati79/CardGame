@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import CardItem from "./CardItem";
 import type { Card, TimerController } from "../types/modules";
 import { fruitsArray } from "../constants";
@@ -28,6 +28,8 @@ function CardGame() {
   const [formInputs, setFormInputs] = useState(initailSettings);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
+  const timeoutRef = useRef<number | null>(null);
+
   const onFinish = useCallback(() => {
     setIsTimeOver(true);
   }, []);
@@ -56,36 +58,48 @@ function CardGame() {
     [formInputs.actionNumber, timerControls]
   );
 
-  const handleCehckAnswer = (item: Card) => {
-    //check two option and show results and reset other cards or all cards
-    if (item.text === firstOption?.text) {
-      // you win
-      setCorrectItems((prev) => [...prev, firstOption, item]);
-    } else {
-      //reset
-    }
-  };
-
-  const handleSelectCard = async (item: Card) => {
-    if (!gameStarted) {
-      setGameStarted(true);
-      timerControls?.start();
-    }
-    setActionNumber((prev) => prev - 1);
-    if (firstOption) {
-      if (item.id === firstOption.id) {
-        return;
+  const handleCheckAnswer = useCallback(
+    (item: Card) => {
+      if (item.text === firstOption?.text) {
+        setCorrectItems((prev) => [...prev, firstOption, item]);
       }
-      setSecondOption(item);
-      setTimeout(() => {
-        handleCehckAnswer(item);
-        setFirstOption(undefined);
-        setSecondOption(undefined);
-      }, 2000);
-    } else {
-      setFirstOption(item);
-    }
-  };
+    },
+    [firstOption]
+  );
+
+  const handleSelectCard = useCallback(
+    (item: Card) => {
+      if (!gameStarted) {
+        setGameStarted(true);
+        timerControls?.start();
+      }
+
+      setActionNumber((prev) => prev - 1);
+
+      if (firstOption) {
+        if (item.id === firstOption.id) return;
+
+        setSecondOption(item);
+
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+        timeoutRef.current = setTimeout(() => {
+          handleCheckAnswer(item);
+          setFirstOption(undefined);
+          setSecondOption(undefined);
+        }, 2000);
+      } else {
+        setFirstOption(item);
+      }
+    },
+    [firstOption, gameStarted, timerControls, handleCheckAnswer]
+  );
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
