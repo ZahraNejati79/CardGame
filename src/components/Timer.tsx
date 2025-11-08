@@ -1,5 +1,5 @@
 import { memo, useEffect } from "react";
-import useCountDowun from "../hooks/useCountDowun";
+import useCountdown from "../hooks/useCountdown";
 import type { TimerController } from "../types/modules";
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 
 function Timer({ totalTime, onFinish, onMount }: Props) {
   const { resetCountDown, startCountdown, stopCountdown, timeLeft } =
-    useCountDowun({ totalTime, onFinish });
+    useCountdown({ totalTime, onFinish });
 
   useEffect(() => {
     onMount?.({

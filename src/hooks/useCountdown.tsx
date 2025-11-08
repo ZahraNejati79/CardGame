@@ -5,7 +5,7 @@ type Props = {
   onFinish?: () => void;
 };
 
-function useCountDowun({ totalTime = 120, onFinish }: Props) {
+function useCountdown({ totalTime = 120, onFinish }: Props) {
   const [countDown, setCountDown] = useState(totalTime);
   const timeoutRef = useRef<number | null>(null);
 
@@ -59,4 +59,4 @@ function useCountDowun({ totalTime = 120, onFinish }: Props) {
   };
 }
 
-export default useCountDowun;
+export default useCountdown;
