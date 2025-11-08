@@ -23,7 +23,7 @@ function useCountdown({ totalTime = 120, onFinish }: Props) {
     setCountDown((prev) => {
       if (prev <= 1) {
         stopCountdown();
-        onFinish && onFinish();
+        // onFinish && onFinish();
         return 0;
       }
       return prev - 1;
@@ -32,6 +32,12 @@ function useCountdown({ totalTime = 120, onFinish }: Props) {
     if (timeoutRef.current)
       timeoutRef.current = window.setTimeout(decrementCount, 1000);
   }, [onFinish]);
+
+  useEffect(() => {
+    if (countDown === 0) {
+      onFinish?.();
+    }
+  }, [countDown, onFinish]);
 
   const startCountdown = useCallback(() => {
     if (!timeoutRef.current) {
