@@ -5,8 +5,9 @@ import { fruitsArray } from "../constants";
 import StatusBar from "./StatusBar";
 import Modal from "./Modal";
 import SettingsForm from "./SettingsForm";
+import GameResultOverlay from "./GameResultOverlay";
 
-const initailSettings = { actionNumber: 20, time: 5 };
+const initailSettings = { actionNumber: 20, time: 120 };
 
 function shuffleArray<T>(array: T[]): T[] {
   return [...array].sort(() => Math.random() - 0.5);
@@ -48,16 +49,19 @@ function CardGame() {
     return correctItems.length === cards.length;
   }, [isFinished]);
 
-  const resetGame = (newAction: number = formInputs.actionNumber) => {
-    setFirstOption(undefined);
-    setSecondOption(undefined);
-    setCorrectItems([]);
-    setActionNumber(newAction);
-    setStartGame(false);
-    setIsTimeout(false);
-    setCards(shuffleArray(fruitsArray));
-    timerControls?.reset();
-  };
+  const resetGame = useCallback(
+    (newAction: number = formInputs.actionNumber) => {
+      setFirstOption(undefined);
+      setSecondOption(undefined);
+      setCorrectItems([]);
+      setActionNumber(newAction);
+      setStartGame(false);
+      setIsTimeout(false);
+      setCards(shuffleArray(fruitsArray));
+      timerControls?.reset();
+    },
+    [formInputs.actionNumber, timerControls]
+  );
 
   const handleCehckAnswer = (item: Card) => {
     //check two option and show results and reset other cards or all cards
@@ -166,14 +170,11 @@ function CardGame() {
         </div>
       </div>
 
-      {isFinished && (
-        <div className="absolute inset-0 bg-red-100/50">
-          <div className="cursor-pointer" onClick={() => resetGame()}>
-            شروع بازی
-          </div>
-          <div>{isWin ? <div>برررررررررردی</div> : <div> باختی</div>}</div>
-        </div>
-      )}
+      <GameResultOverlay
+        isFinished={!!isFinished}
+        isWin={isWin}
+        resetGame={resetGame}
+      />
     </div>
   );
 }
