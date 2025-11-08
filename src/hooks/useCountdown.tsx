@@ -9,15 +9,21 @@ function useCountdown({ totalTime = 120, onFinish }: Props) {
   const [countDown, setCountDown] = useState(totalTime);
   const timeoutRef = useRef<number | null>(null);
 
+  useEffect(() => {
+    return () => clearTimeout(timeoutRef.current!);
+  }, []);
+
+  useEffect(() => {
+    if (countDown === 0) {
+      onFinish?.();
+    }
+  }, [countDown, onFinish]);
+
   const timeLeft = useMemo(() => {
     const minutes = Math.floor(countDown / 60);
     const seconds = countDown % 60;
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }, [countDown]);
-
-  useEffect(() => {
-    return () => clearTimeout(timeoutRef.current!);
-  }, []);
 
   const decrementCount = useCallback(() => {
     setCountDown((prev) => {
@@ -32,12 +38,6 @@ function useCountdown({ totalTime = 120, onFinish }: Props) {
     if (timeoutRef.current)
       timeoutRef.current = window.setTimeout(decrementCount, 1000);
   }, [onFinish]);
-
-  useEffect(() => {
-    if (countDown === 0) {
-      onFinish?.();
-    }
-  }, [countDown, onFinish]);
 
   const startCountdown = useCallback(() => {
     if (!timeoutRef.current) {
